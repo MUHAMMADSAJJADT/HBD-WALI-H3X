@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM // BIRTHDAY_WALI.EXE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00f0ff;
+            --magenta: #ff0055;
+            --yellow: #ffe600;
+        }
+
+        body {
+            background-color: #030303;
+            color: #ffffff;
+            font-family: 'Fira Code', monospace;
+            overflow-x: hidden;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Scanlines Effect */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.03),
+                rgba(0, 255, 0, 0.01),
+                rgba(0, 0, 255, 0.03)
+            );
+            background-size: 100% 3px, 6px 100%;
+            z-index: 50;
+        }
+
+        /* CRT Screen Flicker */
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            52% { opacity: 0.92; }
+            54% { opacity: 1; }
+            80% { opacity: 0.96; }
+            100% { opacity: 0.99; }
+        }
+        .crt-flicker {
+            animation: flicker 0.15s infinite;
+        }
+
+        /* CSS Glitch Text */
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            clip: rect(0, 0, 0, 0);
+        }
+        .glitch-text::before {
+            left: -2px;
+            text-shadow: 2px 0 var(--magenta);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        .glitch-text::after {
+            left: 2px;
+            text-shadow: -2px 0 var(--cyan);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(20px, 9999px, 15px, 0); }
+            20% { clip: rect(50px, 9999px, 80px, 0); }
+            40% { clip: rect(10px, 9999px, 40px, 0); }
+            60% { clip: rect(70px, 9999px, 30px, 0); }
+            80% { clip: rect(30px, 9999px, 60px, 0); }
+            100% { clip: rect(90px, 9999px, 10px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(80px, 9999px, 10px, 0); }
+            20% { clip: rect(10px, 9999px, 50px, 0); }
+            40% { clip: rect(40px, 9999px, 20px, 0); }
+            60% { clip: rect(20px, 9999px, 90px, 0); }
+            80% { clip: rect(60px, 9999px, 30px, 0); }
+            100% { clip: rect(30px, 9999px, 70px, 0); }
+        }
+
+        /* Cyberpunk Button Style */
+        .cyber-btn {
+            position: relative;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .cyber-btn:hover {
+            background: var(--cyan);
+            color: #000;
+            box-shadow: 0 0 20px var(--cyan);
+            transform: translateY(-2px);
+        }
+        .cyber-btn:active {
+            transform: translateY(1px);
+        }
+
+        .cyber-btn-magenta {
+            border-color: var(--magenta);
+            color: var(--magenta);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.2);
+        }
+        .cyber-btn-magenta:hover {
+            background: var(--magenta);
+            color: #fff;
+            box-shadow: 0 0 20px var(--magenta);
+        }
+
+        .cyber-btn-yellow {
+            border-color: var(--yellow);
+            color: var(--yellow);
+            box-shadow: 0 0 10px rgba(255, 230, 0, 0.2);
+        }
+        .cyber-btn-yellow:hover {
+            background: var(--yellow);
+            color: #000;
+            box-shadow: 0 0 20px var(--yellow);
+        }
+
+        /* Cyber Box Glassmorphism */
+        .cyber-card {
+            background: rgba(10, 10, 15, 0.85);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+            position: relative;
+        }
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px;
+            width: 15px; height: 15px;
+            border-top: 2px solid var(--cyan);
+            border-left: 2px solid var(--cyan);
+        }
+        .cyber-card::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; right: -1px;
+            width: 15px; height: 15px;
+            border-bottom: 2px solid var(--magenta);
+            border-right: 2px solid var(--magenta);
+        }
+
+        /* Flash animations */
+        @keyframes fullGlitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-5px, 5px) }
+            40% { transform: translate(-5px, -5px) }
+            60% { transform: translate(5px, 5px) }
+            80% { transform: translate(5px, -5px) }
+            100% { transform: translate(0) }
+        }
+        .screaming-glitch {
+            animation: fullGlitch 0.05s infinite;
+        }
+    </style>
+</head>
+<body class="crt-flicker min-h-screen flex items-center justify-center p-4">
+
+    <!-- Scanline overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Dynamic Glitch Canvas Background -->
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Main Container -->
+    <main class="relative z-10 w-full max-w-2xl">
+
+        /* STAGE 1: INITIAL SYSTEM INTERFACE */
+        <div id="stage1" class="cyber-card p-6 md:p-10 rounded-none space-y-6 text-center">
+            <div class="inline-block px-3 py-1 bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 text-xs font-mono mb-2">
+                [SECURE_CONNECTION // PROTOCOL_2026]
+            </div>
+
+            <h1 class="text-3xl md:text-5xl font-orbitron font-black tracking-widest text-white glitch-text uppercase" data-text="SYSTEM DETECTED: WALI BHAI">
+                SYSTEM DETECTED: WALI BHAI
+            </h1>
+
+            <div class="space-y-2 text-left bg-black/70 p-4 border border-zinc-800 text-sm font-mono text-zinc-400">
+                <p><span class="text-emerald-400">></span> Target Identified: <span class="text-white font-bold">WALI BHAI</span></p>
+                <p><span class="text-emerald-400">></span> Diagnostic Check: <span class="text-yellow-400">Aging process +1 year detected.</span></p>
+                <p><span class="text-emerald-400">></span> Threat Level: <span class="text-cyan-400">MAXIMUM AWESOMENESS</span></p>
+                <p><span class="text-emerald-400">></span> Status: <span class="text-pink-500">Awaiting user activation...</span></p>
+            </div>
+
+            <div class="pt-4">
+                <button id="initBtn" class="cyber-btn w-full md:w-auto px-8 py-4 text-base md:text-lg font-bold">
+                    INITIALIZE WALI.EXE
+                </button>
+            </div>
+        </div>
+
+        <!-- STAGE 2: MAIN BIRTHDAY HUB -->
+        <div id="stage2" class="cyber-card p-6 md:p-10 rounded-none space-y-6 hidden">
+            <!-- Header Bar -->
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+                <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-red-500 rounded-full inline-block animate-ping"></span>
+                    <span class="text-xs font-mono text-zinc-400">LIVE_SESSION // ID: BDAY_NODE</span>
+                </div>
+                <div class="text-xs font-mono text-cyan-400">CONFIDENTIAL</div>
+            </div>
+
+            <!-- Greeting Banner -->
+            <div class="text-center py-2">
+                <h2 class="text-3xl md:text-5xl font-orbitron font-black text-white glitch-text tracking-wide uppercase" data-text="HAPPY BIRTHDAY!">
+                    HAPPY BIRTHDAY!
+                </h2>
+                <p class="text-pink-500 text-sm font-mono mt-2 uppercase tracking-widest">// ANOTHER YEAR OLDER, STILL ZERO BRAIN CELLS FOUND</p>
+            </div>
+
+            <!-- Custom Cyber Wish Message -->
+            <div class="bg-black/80 p-5 border-l-2 border-cyan-400 text-zinc-300 space-y-3 text-sm leading-relaxed font-mono">
+                <p class="text-cyan-400 font-bold">> SYSTEM_MESSAGE.TXT</p>
+                <p>
+                    Yo! Happy Birthday man! 🎉 Hope this year brings higher FPS, zero lag, and some actual common sense into your brain.
+                </p>
+                <p>
+                    Party scene ready rakho, treat pending hai abhi tak. Have an absolute blast today bro! 🚀🔥
+                </p>
+                <p class="text-right text-xs text-zinc-500 pt-2 border-t border-zinc-900">
+                    -- AUTHORIZED BY: <span class="text-cyan-400 font-bold">HEX</span>
+                </p>
+            </div>
+
+            <!-- Action Cyber Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <button id="partyBtn" class="cyber-btn cyber-btn-magenta py-3 text-sm font-bold">
+                    ⚡ EXECUTE PARTY MODE
+                </button>
+                <button id="giftBtn" class="cyber-btn cyber-btn-yellow py-3 text-sm font-bold">
+                    🎁 CLAIM GIFT
+                </button>
+            </div>
+
+            <!-- Mission Complete Finale Launcher -->
+            <div class="pt-4 border-t border-zinc-800 text-center">
+                <button id="finaleBtn" class="cyber-btn w-full py-4 text-base md:text-lg font-bold text-red-500 border-red-500 hover:bg-red-500 hover:text-black">
+                    ☠️ MISSION COMPLETE
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- STAGE 3: BLACKOUT FINALE SCREEN -->
+    <div id="stage3" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center hidden p-4 text-center select-none">
+        <!-- Minimal Line Art / ASCII Middle Finger in White Border Box -->
+        <div class="border-2 border-white p-6 md:p-8 bg-black max-w-sm w-full mx-auto shadow-2xl">
+            <!-- White Outline Middle Finger SVG -->
+            <svg class="w-28 h-28 md:w-36 md:h-36 mx-auto text-white stroke-current fill-none" viewBox="0 0 100 100" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Middle Finger Outline -->
+                <!-- Wrist -->
+                <path d="M 30,85 L 30,65 L 22,65 C 18,65 15,62 15,58 L 15,48 C 15,44 18,41 22,41 L 30,41" />
+                <!-- Index (folded) -->
+                <path d="M 30,41 C 30,35 38,35 38,41 L 38,55" />
+                <!-- Middle Finger (extended erect) -->
+                <path d="M 38,41 L 38,15 C 38,9 50,9 50,15 L 50,55" />
+                <!-- Ring (folded) -->
+                <path d="M 50,41 C 50,35 58,35 58,41 L 58,55" />
+                <!-- Pinky (folded) -->
+                <path d="M 58,45 C 58,40 66,40 66,45 L 66,58 C 66,65 60,72 52,72 L 30,72" />
+                <!-- Thumb folded across -->
+                <path d="M 22,50 C 25,50 30,52 35,58" />
+                <!-- Wrist bottom lines -->
+                <path d="M 30,72 L 30,85" />
+                <path d="M 52,72 L 52,85" />
+            </svg>
+
+            <!-- Final Message requested by user -->
+            <h1 class="text-xl md:text-2xl font-orbitron font-black text-white mt-6 tracking-wide uppercase">
+                AB ENJOY KRLE BSDK
+            </h1>
+
+            <div class="mt-4 pt-3 border-t border-zinc-800 text-xs font-mono text-zinc-400 uppercase tracking-widest">
+                - HEX
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup for Trolling / Interactive feedback -->
+    <div id="cyberModal" class="fixed inset-0 bg-black/90 z-40 flex items-center justify-center p-4 hidden">
+        <div class="cyber-card max-w-md w-full p-6 text-center space-y-4">
+            <h3 id="modalTitle" class="text-xl font-orbitron font-bold text-cyan-400">SYSTEM ALERT</h3>
+            <p id="modalBody" class="text-sm font-mono text-zinc-300"></p>
+            <button id="modalCloseBtn" class="cyber-btn px-6 py-2 text-xs font-bold">CLOSE</button>
+        </div>
+    </div>
+
+    <script>
+        // Background Matrix / Cyber Particle Animation
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const chars = '01WALIHEX0123456789%&@#$*';
+        const fontSize = 14;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        function drawBackground() {
+            ctx.fillStyle = 'rgba(3, 3, 3, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00f0ff';
+            ctx.font = fontSize + 'px "Fira Code", monospace';
+
+            columns = Math.floor(canvas.width / fontSize);
+            if (drops.length < columns) {
+                while (drops.length < columns) drops.push(1);
+            }
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                // Occasionally paint magenta for glitch feeling
+                if (Math.random() > 0.92) {
+                    ctx.fillStyle = '#ff0055';
+                } else {
+                    ctx.fillStyle = 'rgba(0, 240, 255, 0.35)';
+                }
+
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        let bgInterval = setInterval(drawBackground, 33);
+
+        // UI Flow Elements
+        const stage1 = document.getElementById('stage1');
+        const stage2 = document.getElementById('stage2');
+        const stage3 = document.getElementById('stage3');
+
+        const initBtn = document.getElementById('initBtn');
+        const partyBtn = document.getElementById('partyBtn');
+        const giftBtn = document.getElementById('giftBtn');
+        const finaleBtn = document.getElementById('finaleBtn');
+
+        const cyberModal = document.getElementById('cyberModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+        // Stage 1 -> Stage 2
+        initBtn.addEventListener('click', () => {
+            document.body.classList.add('screaming-glitch');
+            setTimeout(() => {
+                document.body.classList.remove('screaming-glitch');
+                stage1.classList.add('hidden');
+                stage2.classList.remove('hidden');
+            }, 300);
+        });
+
+        // Party Mode FX
+        partyBtn.addEventListener('click', () => {
+            // Accelerate background glitch speed temporarily
+            clearInterval(bgInterval);
+            bgInterval = setInterval(drawBackground, 10);
+            document.body.classList.add('screaming-glitch');
+
+            setTimeout(() => {
+                document.body.classList.remove('screaming-glitch');
+                clearInterval(bgInterval);
+                bgInterval = setInterval(drawBackground, 33);
+            }, 1200);
+
+            showModal('SYSTEM // PARTY_MODE', 'PARTY OVERDRIVE ENGAGED! 🎉💥\n\nTreat kahan hai bro? Scene fast set kar!');
+        });
+
+        // Gift Button Action
+        giftBtn.addEventListener('click', () => {
+            showModal('ERROR 404 // GIFT_NOT_FOUND', 'Pehle treat de, gift tab milega! 💸🍔\n\nContact HEX for clearance.');
+        });
+
+        // Gift Button Action
+        giftBtn.addEventListener('click', () => {
+            showModal('ERROR 404 // GIFT_NOT_FOUND', 'Gift lene ke liye pehle Party Deni Parhti Hai! 💸🍔\n\nContact HEX for further verification.');
+        });
+
+        // Modal Close
+        modalCloseBtn.addEventListener('click', () => {
+            cyberModal.classList.add('hidden');
+        });
+
+        function showModal(title, text) {
+            modalTitle.innerText = title;
+            modalBody.innerText = text;
+            cyberModal.classList.remove('hidden');
+        }
+
+        // Finale Action ("MISSION COMPLETE") -> Pure Blackout & Middle Finger
+        finaleBtn.addEventListener('click', () => {
+            // Intense Glitch transition before blackout
+            document.body.classList.add('screaming-glitch');
+            
+            setTimeout(() => {
+                stage1.classList.add('hidden');
+                stage2.classList.add('hidden');
+                cyberModal.classList.add('hidden');
+                
+                // Pure blackout screen activation
+                stage3.classList.remove('hidden');
+                document.body.classList.remove('screaming-glitch');
+                document.body.style.backgroundColor = '#000000';
+            }, 400);
+        });
+    </script>
+</body>
+</html>
